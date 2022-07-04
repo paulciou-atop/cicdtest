@@ -1,0 +1,142 @@
+// Copyright Atop NMS team.
+//
+
+// This file define inventory service gRPC API , inventory package location: /nms/inventory
+
+syntax = "proto3";
+
+option go_package = "/v1/inventory";
+
+package inventory;
+import "google/api/annotations.proto";
+import "google/protobuf/struct.proto";
+import "v1/common/common.proto";
+
+service Inventories {
+  rpc List(ListInventoriesRequest) returns (ListInventoriesResponse) {
+    option (google.api.http) = {
+      post: "/v1/inventories"
+      body:"*"
+    };
+  }
+
+  rpc Get(GetInventoryRequest) returns (GetInventoryResponse) {
+    option (google.api.http) = {
+      get: "/v1/inventories/{id}"
+    };
+  }
+
+}
+
+service Snapshots {
+  rpc Create(CreateSnapshotRequest) returns (CreateSnapshotResponse){
+    option (google.api.http) = {
+      post: "/v1/snapshots"
+      body:"*"
+    };
+  }
+  // GET /v1/snapshots?pagination.page=1&pagination.size=20
+  rpc List(ListSnapshotRequest) returns (ListSnapshotResponse) {
+    option (google.api.http) = {
+      get: "/v1/snapshots"
+    };
+  }
+
+  rpc GetInventoris(GetSnapshotInventorisRequest) returns (ListInventoriesResponse){
+    option (google.api.http) = {
+      get: "/v1/snapshots/{commit}"
+    };
+  }
+}
+
+
+message Location {
+  string path=1;
+}
+
+message FirmwareInfo {
+  string kernel=1;
+  string ap=2;
+}
+
+
+
+message Patch {
+  
+  string hast=2;
+}
+
+message Inventory {
+  // inventory name
+  string name = 1;
+  string device_type =2;
+  // inventory unique ID
+  string id=3;
+  string owner=4; 
+  string model=5;
+  Location location=6;
+  string ip_address=7;
+  string mac_address=8;
+  string host_name=9;
+  FirmwareInfo firmware_information=10;
+  string created_at=11;
+  string last_seen=12;
+  string last_missing=13;
+  string last_recovered=14;
+  repeated string support_protocols=15;
+  google.protobuf.Struct more=16;
+}
+
+message ListInventoriesRequest {
+  common.Pagination pagination =1;
+}
+
+message ListInventoriesResponse {
+  bool success=1;
+  string message=2;
+  common.PaginationResponse pagination=3;
+  repeated Inventory inventories=4;
+}
+
+message GetInventoryRequest {
+  string id=1;
+}
+
+message GetInventoryResponse {
+  bool success=1;
+  string message=2;
+  Inventory inventory=3;
+}
+
+message Snapshot {
+  string commit=1;
+  string created_at=2;
+  string author=3;
+  string emali=4;
+}
+
+message CreateSnapshotRequest {
+  string desc=1;
+  string author=2;
+  string email=3;
+}
+
+message CreateSnapshotResponse {
+  bool success=1;
+  string message=2;
+  Snapshot snapshot=3;
+}
+
+message ListSnapshotRequest {
+  common.Pagination pagination=1;
+}
+
+message ListSnapshotResponse {
+  bool success=1;
+  string message=2;
+  repeated Snapshot snapshots=3;
+}
+
+message GetSnapshotInventorisRequest{
+  string commit=1;
+}

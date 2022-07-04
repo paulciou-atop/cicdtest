@@ -1,0 +1,3 @@
+
+echo Clean...
+del .\bin\*.exe

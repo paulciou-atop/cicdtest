@@ -1,0 +1,433 @@
+{
+	"info": {
+		"_postman_id": "773812c8-cbf7-41bd-a36e-bc88286d4b78",
+		"name": "atopudpscan",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "gwd",
+			"item": [
+				{
+					"name": "SessionScan",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"ServerIp\": \"192.168.4.21\",\r\n\"id\": \"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8093/api/v1/gwd/SessionScan",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8093",
+							"path": [
+								"api",
+								"v1",
+								"gwd",
+								"SessionScan"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetSessionStatus",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"id\": \"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8093/api/v1/gwd/GetSessionStatus",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8093",
+							"path": [
+								"api",
+								"v1",
+								"gwd",
+								"GetSessionStatus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetSessiondata",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"id\": \"2\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8093/api/v1/gwd/GetSessionData",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8093",
+							"path": [
+								"api",
+								"v1",
+								"gwd",
+								"GetSessionData"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetServerIp",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8093/api/v1/gwd/GetServerIp",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8093",
+							"path": [
+								"api",
+								"v1",
+								"gwd",
+								"GetServerIp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Beep",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"IPAddress\": \"192.168.4.30\",\r\n \"MACAddress\":\"00-60-e9-18-3c-3c\",\r\n \"ServerIp\":\"192.168.4.21\"\r\n }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8093/api/v1/gwd/Beep",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8093",
+							"path": [
+								"api",
+								"v1",
+								"gwd",
+								"Beep"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "stop",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"id\": \"2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8093/api/v1/gwd/Stop",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8093",
+							"path": [
+								"api",
+								"v1",
+								"gwd",
+								"Stop"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "device",
+			"item": [
+				{
+					"name": "FwUpgrading",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"DeviceIp\": \"192.168.4.30\",\r\n    \"FileName\": \"20220520150853.dld\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8093/api/v1/atopDevice/FwUpgrading",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8093",
+							"path": [
+								"api",
+								"v1",
+								"atopDevice",
+								"FwUpgrading"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetServerIp",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8093/api/v1/atopDevice/GetServerIp",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8093",
+							"path": [
+								"api",
+								"v1",
+								"atopDevice",
+								"GetServerIp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reboot",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"IPAddress\": \"192.168.4.30\",\r\n    \"MACAddress\": \"00-60-e9-18-3c-3c\",\r\n    \"ServerIp\": \"192.168.4.21\",\r\n    \"Username\": \"admin\",\r\n    \"Password\": \"default\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8093/api/v1/atopDevice/Reboot",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8093",
+							"path": [
+								"api",
+								"v1",
+								"atopDevice",
+								"Reboot"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SettingConfig",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"IPAddress\": \"192.168.4.30\",\r\n    \"MACAddress\": \"00-60-e9-18-3c-3c\",\r\n    \"NewIPAddress\": \"192.168.4.30\",\r\n    \"Netmask\": \"255.255.255.0\",\r\n    \"Gateway\": \"192.168.4.254\",\r\n    \"Hostname\": \"test\",\r\n    \"Username\": \"admin123\",\r\n    \"Password\": \"default\",\r\n    \"ServerIp\": \"192.168.4.21\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8093/api/v1/atopDevice/SettingConfig",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8093",
+							"path": [
+								"api",
+								"v1",
+								"atopDevice",
+								"SettingConfig"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "uploadfile",
+									"contentType": "application/octet-stream",
+									"type": "file",
+									"src": "/C:/atop/AtopIOTServer-master/Atop iot server/NMS/test_issue2/NMS/src/services/atopudpscan/EH7520-4G-8PoE-4SFP_K545_A545.dld"
+								},
+								{
+									"key": "Data",
+									"contentType": "application/octet-stream",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8093/api/v1/atopDevice/Upload",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8093",
+							"path": [
+								"api",
+								"v1",
+								"atopDevice",
+								"Upload"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"FileName\": \"202205231107221.dld\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8093/api/v1/atopDevice/DeleteFile",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8093",
+							"path": [
+								"api",
+								"v1",
+								"atopDevice",
+								"DeleteFile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetProcessStatus",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"IPAddress\": \"192.168.4.30\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8093/api/v1/atopDevice/GetProcessStatus",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8093",
+							"path": [
+								"api",
+								"v1",
+								"atopDevice",
+								"GetProcessStatus"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

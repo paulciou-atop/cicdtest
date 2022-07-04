@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+package dataStore;
+
+option go_package = "./dataStore;db_store";
+import "google/protobuf/any.proto";
+
+
+
+message BlobData {
+  string kind = 1;//table name
+  int32 size = 2; //how many rows
+  message BlobEle {
+    string kind=1; //row info
+    int32 size= 2;//maybetime stamp
+    message BlobKV{
+      string key=1;
+      //google.protobuf.Any value = 2;
+      string value=2;
+    }
+    repeated BlobKV keyValueData =3;
+
+  }
+  repeated BlobEle element =3 ;
+
+}
+message DatabaseInfo{
+  string databaseType=1;
+  string databaseName=2;
+  string tableName=3;
+}
+
+message condition{
+  string column=1; //the column you want to query
+  string operator=2;//> < =
+  google.protobuf.Any value=3; // compare value
+
+}
+message DbWriteRequest {
+
+  BlobData bd = 1;
+  DatabaseInfo dbInf=2;
+}
+
+message DbWriteResponse {
+  BlobData bd = 1;
+}
+
+message DbReadRequest {
+  condition cond = 1;
+  DatabaseInfo dbInf=2;
+}
+
+message DbReadResponse {
+  BlobData bd = 1;
+}
+
+message UpdateDbRequest {
+  BlobData bd = 1;
+  DatabaseInfo dbInf=2;
+}
+
+message UpdateDbResponse {
+  BlobData bd = 1;
+}
+
+message DeleteDbRequest {
+  string bd_id = 1;
+  DatabaseInfo dbInf=2;
+}
+
+message DeleteDbResponse {
+  string bd_id = 1;
+}
+
+message ListDbRequest {
+  DatabaseInfo dbInf=2;
+}
+
+message ListDbResponse {
+  BlobData bd = 1;
+}
+
+service DbService {
+  rpc DbWrite (DbWriteRequest) returns (DbWriteResponse);
+  rpc DbRead (DbReadRequest) returns (DbReadResponse);
+  rpc UpdateDb (UpdateDbRequest) returns (UpdateDbResponse);
+  rpc DeleteDb (DeleteDbRequest) returns (DeleteDbResponse);
+  rpc ListDb (ListDbRequest) returns (stream ListDbResponse);
+}
+

@@ -1,0 +1,82 @@
+// Copyright Atop NMS team.
+//
+
+// configer API:
+
+syntax = "proto3";
+
+option go_package = "nms/api/v1/configer";
+
+package configer;
+import "google/protobuf/struct.proto";
+import "v1/devconfig/devconfig.proto";
+import "v1/common/common.proto";
+
+// Configer service
+// Every config client (snmp, gwd) should porvied this service's server
+service Configer {
+  rpc Config(stream ConfigerConfigRequest) returns (stream ConfigerResponse);
+  rpc Validate(stream ConfigerValidateRequest) returns (stream ValidateResponse);
+  rpc FileTransfer(stream ConfigerFileTransferRequest) returns(stream ConfigerFileTransferResponse);
+  rpc GetConfig(GetConfigRequest) returns (GetConfigResponse);
+}
+//gwd
+//config must have args:ServerIp,Username,Password
+//support config
+/*
+string      MACAddress  
+string    	NewIPAddress
+string    	Netmask  
+string    	Gateway   
+string    	Hostname 
+string    	Username   
+string    	Password 
+string      ServerIp
+*/
+
+
+
+message ConfigerValidateRequest {
+  devconfig.SessionState session=1;
+  repeated devconfig.ConfigOptions configs=2;
+}
+
+message ConfigerFileTransferRequest {
+  devconfig.SessionState session=1;
+  common.DeviceIdentify device=2;
+  devconfig.FileParam file_param=3;
+}
+
+message ConfigerFileTransferResponse {
+  devconfig.SessionState session=1;
+  int64 byte_transfered=2;
+  string file_paht=3;
+}
+
+message ConfigerConfigRequest {
+  devconfig.SessionState session=1;
+  common.DeviceIdentify device=2;
+  repeated devconfig.ConfigOptions configs=3;
+}
+
+message ConfigerResponse {
+  devconfig.SessionState session=1;
+  common.DeviceIdentify device=2;
+  repeated devconfig.ConfigResult config_results=3;
+}
+
+message ValidateResponse {
+  devconfig.SessionState session=1;
+  repeated devconfig.ConfigResult config_results=2;
+}
+
+message GetConfigRequest {
+  common.DeviceIdentify device=1;
+  // empty means all
+  repeated string kinds=2;
+}
+
+message GetConfigResponse {
+  common.DeviceIdentify device=1;
+  google.protobuf.Struct configs=2;
+}

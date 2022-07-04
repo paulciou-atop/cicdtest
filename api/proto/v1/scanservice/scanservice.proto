@@ -1,0 +1,146 @@
+syntax = "proto3";
+
+option go_package = "/v1/scanservice";
+
+package scanservice;
+
+import "google/api/annotations.proto";
+
+service ScanService {
+  // Start SNMP/GWD scan 
+  rpc StartScan (StartScanRequest) returns (StartScanResponse) {
+    option (google.api.http) = {
+      post: "/v1/scan/start"
+      body:"*"
+    };
+  }
+  // Stop scanning by session ID
+  rpc StopScan (StopScanRequest) returns (StopScanResponse) {
+    option (google.api.http) = {
+      post: "/v1/scan/stop"
+      body:"*"
+    };
+  }
+  // Get status by session ID from database
+  rpc CheckStatus (CheckStatusRequest) returns (CheckStatusResponse) {
+    option (google.api.http) = {
+      post: "/v1/scan/check"
+      body:"*"
+    };
+  }
+  // Get SNMP/GWD data from database
+  rpc GetResult (GetResultRequest) returns (GetResultResponse) {
+    option (google.api.http) = {
+      post: "/v1/scan/result"
+      body:"*"
+    };
+  }
+  // Get SNMP/GWD data from database (by last_updated_time)
+  rpc GetLastResult (GetLastResultRequest) returns (GetLastResultResponse) {
+    option (google.api.http) = {
+      post: "/v1/scan/result/last"
+      body:"*"
+    };
+  }
+}
+
+message StartScanRequest {
+  // Request for SNMP
+  string range = 1;
+  SnmpSettings snmp_settings = 2;
+  repeated string oids = 3;
+  // Request for GWD
+  string serverIp = 4;
+}
+
+message StartScanResponse {
+  SessionInfo info = 1;
+}
+
+message StopScanRequest {
+  string sessionId = 1;
+}
+
+message StopScanResponse {
+  Info info = 1;
+}
+
+message CheckStatusRequest {
+  string sessionId = 1;
+}
+
+message CheckStatusResponse {
+  StatusInfo info = 1;
+}
+
+message GetResultRequest {
+  string sessionId = 1;
+  int32 page = 2;
+  int32 size = 3;
+}
+
+message GetResultResponse {
+  Info info = 1;
+  repeated DeviceInfo content = 2;
+  int32 page = 3;
+  int32 size = 4;
+  int32 total = 5;
+}
+
+message GetLastResultRequest {
+  int32 page = 2;
+  int32 size = 3;
+}
+
+message GetLastResultResponse {
+  Info info = 1;
+  repeated DeviceInfo content = 2;
+  int32 page = 3;
+  int32 size = 4;
+  int32 total = 5;
+}
+
+message SessionInfo {
+  bool success = 1;
+  string sessionId = 2;
+  string message = 3;
+}
+
+message StatusInfo {
+  bool success = 1;
+  string status = 2;
+  string message = 3;
+}
+
+message Info {
+  bool success = 1;
+  string message = 2;
+}
+
+message SnmpSettings {
+  int32 port = 1;
+  string read_community = 2;
+  string write_community = 3;
+  enum SNMPVer {
+    ver1 = 0x0;
+    ver2 = 0x1;
+    ver3 = 0x2;
+  }
+  SNMPVer version = 4;
+}
+
+message DeviceInfo {
+  string sessionId = 1;
+  string model = 2;
+  string mac_address = 3;
+  string ip_address = 4;
+  string netmask = 5;
+  string gateway = 6;
+  string hostname = 7;
+  string kernel = 8;
+  string ap = 9;
+  string firmware_ver = 10;
+  string description = 11;
+  string device_type = 12;
+  string scan_time = 13;
+}

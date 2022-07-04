@@ -1,0 +1,89 @@
+{
+  "mode": "container",
+  "services": [
+    {
+      "address": "servicewatcher",
+      "kind": [
+        "https",
+        "grpc"
+      ],
+      "name": "servicewatcher",
+      "port": 8081
+    },
+    {
+      "address": "scanservice",
+      "kind": [
+        "https",
+        "grpc"
+      ],
+      "name": "scanservice",
+      "port": 8080
+    },
+    {
+      "address": "snmpscan",
+      "kind": [
+        "https",
+        "grpc"
+      ],
+      "name": "snmpscan",
+      "port": 8084
+    },
+    {
+      "address": "redis",
+      "kind": [
+        "redis"
+      ],
+      "name": "redis",
+      "port": 6379
+    },
+    {
+      "address": "atopudpscan",
+      "kind": [
+        "https",
+        "grpc"
+      ],
+      "name": "atopudpscan",
+      "port": 8083
+    },
+    {
+      "address": "mongo",
+      "kind": [
+        "db"
+      ],
+      "name": "mongo",
+      "port": 27017
+    },
+    {
+      "address": "datastore",
+      "kind": [
+        "db"
+      ],
+      "name": "datastore",
+      "port": 8082
+    },
+    {
+      "address": "dummyconfiger",
+      "kind": [
+        "grpc"
+      ],
+      "name": "dummyconfiger",
+      "port": 8085
+    },
+    {
+      "address": "config",
+      "kind": [
+        "grpc"
+      ],
+      "name": "config",
+      "port": 8100
+    },
+    {
+      "address": "inventory",
+      "kind": [
+        "grpc"
+      ],
+      "name": "inventory",
+      "port": 8101
+    }
+  ]
+}

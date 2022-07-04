@@ -1,0 +1,292 @@
+// Copyright Atop NMS team.
+//
+
+// This file define SnmpScan service
+
+syntax = "proto3";
+
+option go_package = "/v1/snmpscan";
+
+package snmpscan;
+import "google/api/annotations.proto";
+import "google/protobuf/struct.proto";
+
+/* PDU represents SNMP protocol data unit
+*/
+message PDU {
+  string name = 1;
+  google.protobuf.Value value = 2;
+  string kind =3;
+  string oid = 4;
+}
+
+
+message WalkallRequest {
+  string target=1;
+  string root_oid=2;
+}
+
+message SnmpSettings {
+  int32 port=2;
+  string read_community=3;
+  string write_community=4;
+  enum SNMPVer {
+    ver1 = 0x0;
+    ver2c = 0x1;
+    ver3 = 0x2;
+  }
+  SNMPVer version=5;
+}
+
+message GetRequest {
+  // ip or host 
+  string target=1;
+  SnmpSettings snmp_settings=2;
+  // oids, if it's be a empty slice instead of default oids
+  repeated string oids=3;
+}
+
+message ScanRequest {
+  string range=1;
+  SnmpSettings snmp_settings=2;
+  bool atop_devices=3;
+  repeated string oids=4;
+}
+
+message SessionScanRequest {
+  string session_id=1;
+  ScanRequest scan_request=2;
+}
+
+message SessionScanResponse {
+  string session_id = 1;
+  string state = 2;
+}
+
+message ScanResult {
+  repeated PDU pdus=1;
+}
+
+message DescribeRequest {
+  string target=1; //IP or Host
+  SnmpSettings snmp_settings=2;
+}
+
+message DescribeResult {
+  PublicMatrix information=1;
+}
+
+// We don't follow proto buffer naming convention here, cause we want to 
+// keep origin names defined in RFC1213-MIBs
+// Public MIBs for every devices
+message PublicMatrix {
+  message Interfaces {
+    int32 ifIndex=1;
+    string ifDescr=2;
+    string ifPhysAddress=3;
+    int32 ifAdminStatus=4;
+    int32 ifOperStatus=5;
+    int64 ifInNUcastPkts=6;
+    int64 ifOutErrors=7;
+    int64 ifHCInOctets=8;
+    int64 ifHCInUcastPkts=9;
+    int64 ifHCInMulticastPkts=10;
+    int64 ifHCInBroadcastPkts=11;
+    int64 ifHCOutOctets=12;
+    int64 ifHCOutUcastPkts=13;
+    int64 ifHCOutMulticastPkts=14;
+    int64 ifHCOutBroadcastPkts=15;
+    int32 ifHighSpeed=16;
+  };
+  
+  string sysDescr=1;
+  string sysObjectId=2;
+  int64 sysUpTime=3;
+  string sysContact=4;
+  string sysName=5;
+  string sysLocation=6;
+  int32 sysServices=7;
+  repeated Interfaces interfaces=8;
+}
+
+// AtopDevicesMatrix
+// Basic matrix of atop device
+message AtopDevicesMatrix {
+  message SystemInfo {
+    message PowerInfo {
+      int32 powerInfoNumber=1;
+      int32 powerInfoStatus=2;
+    }
+    string systemDescr=1;
+    string systemFwVer=2;
+    string systemMacAddress=3;
+    string systemKernelVer=4;
+    repeated PowerInfo powerInfos=5;
+    string systemModel=6;
+  }
+}
+
+// Atop devices settings
+message AtopDeviceSettings {
+  message SysLogSettings {
+    int32 syslogStatus=1;
+    int32 serverPort=2;
+    int32 eventServerLevel=3;
+    int32 eventLogToFlash=4;
+    string eventServerIP=5;
+  }
+  message TrapSettings {
+    int32 snmpTrapServerStatus=1;
+    string snmpTrapServerIP=2;
+    int32 snmpTrapServerPort=3;
+    string snmpTrapServerTrapComm=4;
+  }
+
+  // Atop device's basic settings
+  message BasicSetting {
+    message IPConfiguration {
+      int32 ipConfigurationDHCPStatus=1;
+      string ipConfigurationAddress=2;
+      string ipConfigurationSubMask=3;
+      string ipConfigurationGateway=4;
+      string ipConfigurationDNS1=5;
+      string ipConfigurationDNS2=6;
+    }
+    message BackupAndRestore {
+      // .2.6.1.0
+      string backupServerIP=1;
+      // .2.6.2.0
+      string backupAgentBoardFwFileName=2;
+      // .2.6.3.0
+      string backupStatus=3;
+      // .2.6.4.0
+      string restoreSeviceIP=4;
+      // .2.4.5.0
+      string restoreAgentBoardFwFileName=5;
+      // .2.6.6.0
+      string restoreStatus=6;
+    }
+    message FactoryDefault {
+      // .2.8.1.0
+      string factoryDefaultAction=1;
+    }
+    message SystemReboot {
+      // .2.9.1.0
+      string SystemRebootAction=1;
+    }
+    message SaveConfig {
+      // .13.1.0
+      string saveCfgMgtAction=1;
+    }
+  }
+
+  // Atop switch port configuration
+  message PortConfiguration {
+    // .3.1.2.1.3
+    string portStatusPortMode=1;
+  }
+  message Diagnosis {
+    int32 locateBeep=1;
+  }
+}
+
+// AtopDeviceDescribeRequest request 
+message AtopDeviceDescribeRequest{
+  string target=1; //IP Address, 
+}
+
+message AsyncResponse {
+  // the unique session ID, format = (ss:123e4567-e89b-12d3-a456-426655440000)
+  // ss means snmpscan
+  string session_id=1;
+  // Request was success or fail
+  bool success =2;
+  string time_stamp=3;
+  // Error message
+  string msg=4;
+}
+
+message AsyncScanResult {
+  string session_id = 1;
+  bool success=2;
+  // status running | fail | success
+  string status=3;
+  string time_stamp=4;
+  repeated ScanResult result=5;
+
+}
+
+message AsyncRequest {
+  string session_id=1;
+}
+
+// Interface exported by the server.
+service SnmpScan {
+  // A simple RPC.
+  //
+  // Obtains the a subtree of values below given rootOid.
+  rpc Walkall(WalkallRequest) returns (stream PDU) {
+    option (google.api.http) = {
+      get: "/api/v1/snmp/walkall"
+
+    };
+  }
+
+  rpc Get( GetRequest) returns (stream PDU) {
+    option (google.api.http) = {
+      get: "/api/v1/snmp/oids"
+ 
+    };
+  }
+
+  rpc Scan(ScanRequest) returns (stream ScanResult) {
+    option (google.api.http) = {
+      get: "/api/v1/snmp/scan"
+ 
+    };
+  }
+
+  rpc SessionScan(SessionScanRequest) returns (stream SessionScanResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/snmp/session-scan"
+      body:"*"
+ 
+    };
+  }
+
+  rpc Describe(DescribeRequest) returns (DescribeResult) {
+    option (google.api.http) = {
+      get: "/api/v1/snmp/describe"
+ 
+    };
+  }
+
+  /*
+    StartAsyncScan start a new session of snmpscan, 
+  */
+  rpc StartAsyncScan(stream ScanRequest) returns (stream AsyncResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/snmp/async-scan/start"
+      body:"*"
+    };
+  }
+
+  // StopAsyncScan stop spe
+  rpc StopAsyncScan(AsyncRequest) returns (AsyncResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/snmp/async-scan/stop/{session_id}"
+      body:"*"
+    };
+  }
+
+  // GetAsyncScanResult specific async scan's last status & result
+  rpc GetAsyncScanResult(AsyncRequest) returns (AsyncScanResult) {
+    option (google.api.http) = {
+      get: "/api/v1/snmp/scan/async-scan/{session_id}"
+ 
+    };
+  }
+  
+}
+
+

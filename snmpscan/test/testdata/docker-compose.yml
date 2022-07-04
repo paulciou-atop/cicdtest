@@ -1,0 +1,8 @@
+version: "3.9"
+services:
+  snmpsim:
+    build: 
+      context: . 
+    ports:
+      - 161:161/udp
+    container_name: snmpsim

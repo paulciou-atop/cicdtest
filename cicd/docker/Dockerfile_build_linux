@@ -1,0 +1,60 @@
+FROM appleatop/nms_base_image:latest AS build
+WORKDIR /build
+COPY go.mod ./
+COPY go.sum ./
+RUN go mod tidy
+COPY . . 
+# Build grpc api 
+RUN chmod 755 /build/api/build.sh\
+    && cd /build/api/\
+    && ./build.sh
+# Build services
+RUN go build -o ./bin/config ./config/cmd/config
+RUN go build -o ./bin/serviceswatcher ./serviceswatcher/cmd/serviceswatcher
+RUN go build -o ./bin/snmpscan ./snmpscan/cmd/snmpscan
+RUN go build -o ./bin/atopudpscan ./atopudpscan/cmd/atopudpscan
+RUN go build -o ./bin/inventory ./inventory/cmd/inventory
+RUN go build -o ./bin/scanservice ./scanservice/cmd/scanservice
+#
+#config
+FROM debian:bullseye AS config
+WORKDIR /app/
+COPY --from=build /build/bin/config ./
+ENTRYPOINT  ["/app/config"]
+# serviceswatcher
+FROM debian:bullseye AS serviceswatcher
+WORKDIR /app/
+COPY --from=build /build/bin/serviceswatcher ./
+ENTRYPOINT  ["/app/serviceswatcher"]
+# snmpscan
+FROM debian:bullseye AS snmpscan
+WORKDIR /app/
+COPY --from=build /build/bin/snmpscan ./
+ENTRYPOINT  ["/app/snmpscan"]
+# atopudpscan
+FROM debian:bullseye AS atopudpscan
+WORKDIR /app/
+COPY --from=build /build/bin/atopudpscan ./
+ENTRYPOINT  ["/app/atopudpscan"]
+# inventory
+FROM debian:bullseye AS inventory
+WORKDIR /app/
+COPY --from=0 /build/bin/inventory ./
+ENTRYPOINT  ["/app/inventory"]
+# scan service
+FROM debian:bullseye AS scanservice
+WORKDIR /app/
+COPY --from=0 /build/bin/scanservice ./
+ENTRYPOINT  ["/app/scanservice"]
+# Production servies 
+FROM appleatop/nms_base_image:latest AS cicdtest
+WORKDIR /app/
+COPY --from=build /build/bin/config ./
+COPY --from=build /build/bin/serviceswatcher ./
+COPY --from=build /build/bin/snmpscan ./
+COPY --from=build /build/bin/atopudpscan ./
+COPY --from=build /build/bin/inventory ./
+COPY --from=build /build/bin/scanservice .
+COPY --from=build /build/cicd/test_script/snmpscan_test.sh ./
+RUN chmod 755 ./snmpscan_test.sh
+ENTRYPOINT  ["/bin/bash"]

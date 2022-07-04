@@ -1,0 +1,202 @@
+[
+  {
+    "id": 1,
+    "deviceType": "GWD/SNMP",
+    "model": "Rabbit",
+    "ipAddress": "130.9.31.90",
+    "macAddress": "21-A3-13-58-15-6D",
+    "hostName": "scientificamerican.com",
+    "kernel": "Job",
+    "ap": "6.7.2"
+  },
+  {
+    "id": 2,
+    "deviceType": "GWD",
+    "model": "EHG7608",
+    "ipAddress": "131.231.238.197",
+    "macAddress": "2C-56-43-F9-B7-CE",
+    "hostName": "networksolutions.com",
+    "kernel": "Stim",
+    "ap": "1.65"
+  },
+  {
+    "id": 3,
+    "deviceType": "GWD",
+    "model": "EHG7508",
+    "ipAddress": "106.164.13.88",
+    "macAddress": "6E-FD-38-07-C2-3F",
+    "hostName": "addtoany.com",
+    "kernel": "Bigtax",
+    "ap": "0.82"
+  },
+  {
+    "id": 4,
+    "deviceType": "GWD",
+    "model": "EHG7508",
+    "ipAddress": "43.165.50.65",
+    "macAddress": "2D-30-44-1F-8C-96",
+    "hostName": "state.tx.us",
+    "kernel": "Zamit",
+    "ap": "7.41"
+  },
+  {
+    "id": 5,
+    "deviceType": "SNMP",
+    "model": "EHG7608",
+    "ipAddress": "14.83.125.172",
+    "macAddress": "D0-2C-9E-99-AC-0F",
+    "hostName": "yelp.com",
+    "kernel": "Vagram",
+    "ap": "0.7.6"
+  },
+  {
+    "id": 6,
+    "deviceType": "GWD/SNMP",
+    "model": "EHG7508",
+    "ipAddress": "42.114.221.63",
+    "macAddress": "6E-0C-11-E9-0F-F0",
+    "hostName": "cdbaby.com",
+    "kernel": "Tres-Zap",
+    "ap": "5.2"
+  },
+  {
+    "id": 7,
+    "deviceType": "GWD/SNMP",
+    "model": "EHG7608",
+    "ipAddress": "188.101.27.82",
+    "macAddress": "D3-04-C7-1E-8B-E7",
+    "hostName": "merriam-webster.com",
+    "kernel": "Y-Solowarm",
+    "ap": "9.0.9"
+  },
+  {
+    "id": 8,
+    "deviceType": "GWD",
+    "model": "EHG7508",
+    "ipAddress": "22.51.49.192",
+    "macAddress": "DB-37-E7-64-90-BF",
+    "hostName": "economist.com",
+    "kernel": "Regrant",
+    "ap": "3.8.3"
+  },
+  {
+    "id": 9,
+    "deviceType": "GWD/SNMP",
+    "model": "EHG7508",
+    "ipAddress": "196.196.47.113",
+    "macAddress": "8F-90-EE-DF-BE-FB",
+    "hostName": "hud.gov",
+    "kernel": "Matsoft",
+    "ap": "0.1.8"
+  },
+  {
+    "id": 10,
+    "deviceType": "SNMP",
+    "model": "EHG7608",
+    "ipAddress": "153.72.240.141",
+    "macAddress": "BE-18-DE-B2-85-52",
+    "hostName": "twitter.com",
+    "kernel": "Fixflex",
+    "ap": "0.7.2"
+  },
+  {
+    "id": 11,
+    "deviceType": "GWD",
+    "model": "EHG7508",
+    "ipAddress": "183.49.240.168",
+    "macAddress": "5E-2E-5D-4F-91-AF",
+    "hostName": "opensource.org",
+    "kernel": "Temp",
+    "ap": "0.78"
+  },
+  {
+    "id": 12,
+    "deviceType": "GWD/SNMP",
+    "model": "EHG7608",
+    "ipAddress": "72.46.166.131",
+    "macAddress": "C0-49-D8-90-71-1E",
+    "hostName": "plala.or.jp",
+    "kernel": "Sub-Ex",
+    "ap": "3.21"
+  },
+  {
+    "id": 13,
+    "deviceType": "SNMP",
+    "model": "EHG7508",
+    "ipAddress": "90.135.69.197",
+    "macAddress": "07-20-AD-0F-3D-F8",
+    "hostName": "wufoo.com",
+    "kernel": "Regrant",
+    "ap": "4.5.3"
+  },
+  {
+    "id": 14,
+    "deviceType": "GWD",
+    "model": "EHG7608",
+    "ipAddress": "122.78.247.124",
+    "macAddress": "4F-34-A1-CB-72-E8",
+    "hostName": "mozilla.com",
+    "kernel": "Andalax",
+    "ap": "9.31"
+  },
+  {
+    "id": 15,
+    "deviceType": "GWD/SNMP",
+    "model": "EHG7508",
+    "ipAddress": "251.51.223.64",
+    "macAddress": "4F-8F-6A-0C-6E-D7",
+    "hostName": "dot.gov",
+    "kernel": "Kanlam",
+    "ap": "0.98"
+  },
+  {
+    "id": 16,
+    "deviceType": "SNMP",
+    "model": "EHG7608",
+    "ipAddress": "209.79.131.35",
+    "macAddress": "EA-D5-A3-43-28-02",
+    "hostName": "sphinn.com",
+    "kernel": "Opela",
+    "ap": "1.7"
+  },
+  {
+    "id": 17,
+    "deviceType": "GWD",
+    "model": "EHG7508",
+    "ipAddress": "212.239.134.255",
+    "macAddress": "90-43-C0-67-67-88",
+    "hostName": "nature.com",
+    "kernel": "Ventosanzap",
+    "ap": "0.6.9"
+  },
+  {
+    "id": 18,
+    "deviceType": "GWD/SNMP",
+    "model": "Amigo",
+    "ipAddress": "103.118.212.106",
+    "macAddress": "84-00-36-D3-30-F2",
+    "hostName": "wikia.com",
+    "kernel": "Gembucket",
+    "ap": "5.3.6"
+  },
+  {
+    "id": 19,
+    "deviceType": "SNMP",
+    "model": "EHG7608",
+    "ipAddress": "205.49.155.99",
+    "macAddress": "F7-BC-EA-01-E4-5A",
+    "hostName": "pinterest.com",
+    "kernel": "Viva",
+    "ap": "7.1.6"
+  },
+  {
+    "id": 20,
+    "deviceType": "GWD",
+    "model": "EHG7508",
+    "ipAddress": "145.101.76.103",
+    "macAddress": "D9-E7-C0-88-66-5A",
+    "hostName": "amazonaws.com",
+    "kernel": "Cardify",
+    "ap": "7.74"
+  }
+]

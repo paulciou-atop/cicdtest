@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - 15672:15672
+      - 5672:5672
+      - 1883:1883
+    container_name: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    command: "/bin/bash -c \"rabbitmq-plugins enable rabbitmq_mqtt; rabbitmq-server; sleep 1; rabbitmqctl set_permissions -p / guest '.*' '.*' '.*'\""

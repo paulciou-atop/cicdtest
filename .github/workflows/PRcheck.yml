@@ -1,0 +1,67 @@
+name: Main-Pull_Request-Integration-Test
+on:
+  # this will be invoked only when somebody tries to PR to main branch
+  pull_request: 
+    branches: 
+      - 'main'
+  workflow_dispatch:
+jobs:
+  Docker-Main-PR-Test:
+    # build the code in the self-hosted runner in the testbed
+    runs-on: self-hosted 
+    steps:
+      - name: Login to GitHub
+        # currently, we use docker hub private repository, will change to Nexus later
+        uses: docker/login-action@v2
+        with: 
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      - name: Checkout Repository Code
+        uses: actions/checkout@v3
+        id: repository_checkout
+      - name: Set Docker Prefix Time 
+        # create the unique docker and container name starting with cicd_ 
+        # Users can recognize if the cicd is running on the testbed
+        id: docker_prefix
+        run: echo "::set-output name=docker_prefix::cicd$(date '+%d%m%H%M')"
+      - name: Create Docker Image
+        # build and launch the containers
+        id: nms_build
+        run: |
+          echo docker_prefix=${{steps.docker_prefix.outputs.docker_prefix}} 
+          cp cicd/docker/Dockerfile_build_linux .
+          cp cicd/docker/docker-compose-cicdtest.yml . 
+          DOCKER_PREFIX=${{steps.docker_prefix.outputs.docker_prefix}} docker compose -f docker-compose-cicdtest.yml build  
+          DOCKER_PREFIX=${{steps.docker_prefix.outputs.docker_prefix}} docker compose -f docker-compose-cicdtest.yml up --detach 
+          rm Dockerfile_build_linux
+          rm docker-compose-cicdtest.yml
+        continue-on-error: true
+      - name: Run Go Unit Test
+        # Run the unit test, this will be proceeded only the build process is successful. 
+        if: steps.nms_build.outcome == 'success' 
+        id: unit_test
+        run: go test ./../    
+        continue-on-error: true    
+      - name: Integration Test in Testbed 
+        # Run the system integration test, this will be proceeded only when the build proces and the unit test are successful. 
+        id: integration_test 
+        if: steps.nms_build.outcome == 'success' && steps.unit_test.outcome == 'success' 
+        run: |
+          docker exec ${{steps.docker_prefix.outputs.docker_prefix}}_cicdnms /app/snmpscan_test.sh
+        continue-on-error: true    
+      - name: Clean up Dockers
+        # Clean up all the docker images and containers
+        id: docker_cleanup
+        run: |
+          docker rm -f $(docker ps --filter=name=${{steps.docker_prefix.outputs.docker_prefix}}_* -a -q)
+          docker image rm -f $(docker image ls ${{steps.docker_prefix.outputs.docker_prefix}}_* -q)
+      - name: Report the results
+        id: status_report
+        if: steps.nms_build.outcome != 'success' || steps.unit_test.outcome != 'success' || steps.integration_test.outcome != 'success'
+        run: | 
+          echo nmsbuild-${{steps.nms_build.outcome}}
+          echo unit_test-${{steps.unit_test.outcome}}
+          echo integration_test-${{steps.integration_test.outcome}}
+          exit 1 
+
+      

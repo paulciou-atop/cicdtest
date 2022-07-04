@@ -1,0 +1,25 @@
+/bin
+/script/build
+/script/build.exe
+
+# VS Code
+.vscode
+
+# IntelliJ
+.idea
+
+# macOS
+.DS_Store
+
+# vim
+*.swp
+
+# grpc
+*.pb.go
+*.pb.gw.go
+*.swagger.json
+
+# go old version
+vendor/
+dummydevs/
+settings.json

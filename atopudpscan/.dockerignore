@@ -1,0 +1,6 @@
+**/*.dld
+vender/
+**/*.proto
+**/*.md
+Makefile
+**/config.json

@@ -1,0 +1,235 @@
+// Copyright Atop NMS team.
+//
+
+// This file define device config service gRPC API config package location: /nms/config
+
+syntax = "proto3";
+
+option go_package = "nms/api/v1/devconfig";
+
+package devconfig;
+import "google/api/annotations.proto";
+import "google/protobuf/struct.proto";
+import "v1/common/common.proto";
+
+
+
+
+// Config, a gRPC APIs for configuration
+service Config {
+  // ConfigDevice config the specific devcie
+  rpc Device(DeviceConfigRequest) returns (stream ConfigResponse) {
+     option (google.api.http) = {
+      post: "/api/v1/config/device"
+      body:"*"
+    };
+  }
+  // ConfigDevices config multiple devices with configuration
+  rpc Devices(DevicesConfigRequest) returns (stream ConfigResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/config/devices"
+      body:"*"
+    };
+  }
+
+  // Config.Upload upload confiuraiton from devices
+  rpc Upload(UploadConfigRequest) returns (UploadConfigResponse) {
+     option (google.api.http) = {
+      post: "/api/v1/config/upload"
+      body:"*"
+    };
+  }
+
+ 
+  //TODO - ADD Which API, this API allows to config devices with same relationship, 
+  // for example all devices in the xx group
+
+  // rpc Restore()
+  
+  // GetResult get current result of {id}
+  rpc GetResult(GetResultRequest) returns (GetResultResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/config-result/{session_id}"
+      body:"*"
+    };
+  }
+
+  // List configuration seesion with specifc state
+  rpc List(ListRequest) returns (ListResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/config-result/all"
+      body:"*"
+    };
+  }
+}
+
+
+// File, a gRPC APIs for file tranfer
+service FileTransfer {
+  // Restore download file to devices from file service
+  rpc Restore(FileParam) returns (stream FileResponse) {
+     option (google.api.http) = {
+      post: "/api/v1/file-transfer"
+      body:"*"
+    };
+  }
+
+  // Store update file from device and store it into file service  
+  rpc Store(StoreRequest) returns (StoreResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/config/store"
+      body:"*"
+    };
+  }
+
+  // // UploadFile to conifg service
+  // rpc UploadFile(UploadFile)
+  // GetResult get current result of {id}
+  rpc GetResult(GetResultRequest) returns (FileResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/file-transfer/result/{session_id}"
+      body:"*"
+    };
+  }   
+}
+
+
+message FileParam
+{
+  // file's url
+  string file_location=1;
+  common.DeviceIdentify device =2;
+  bool upload =3;
+}
+
+message FileResponse {
+  SessionState state=1;
+  int64 byte_transfered=2;
+  string file_paht=3;
+}
+
+// ConfigReqult a map of unsupported options
+// key = option name, value = value try to configure
+message ConfigResult {
+  string protocol=1;
+  string kind=2;
+  string hash=3;
+  repeated string fail_fields =4; 
+}
+
+message SessionState {
+  //session id
+  string id=1;
+  // succuss | fail | wronging | running
+  string state=2;
+  string startedTime=3;
+  string endedTime=4;
+  // message queue topic
+  string topic =5;
+  string message=6;
+}
+
+message GetResultRequest {
+  string session_id=1;
+}
+
+message ConfigOptions {
+  // what kind of protocol use to setting config, e.g. gwd, snmp
+  string protocol=1;
+  // what kind of configuration for example network, snmp, authentication
+  string kind =2;
+  // payload hash, configer could verify hash whith current config
+  string hash=3;
+  // config payload
+  google.protobuf.Struct payload=4;
+}
+
+//
+message DeviceConfigRequest {
+  common.DeviceIdentify device=1;
+  // settings, allows multiple settings, service will configure each one by one
+  repeated ConfigOptions settings=2;
+  bool valid = 3 ;
+}
+
+
+
+// Multiple devices config
+message DevicesConfigRequest {
+  repeated common.DeviceIdentify devices=1;
+  // settings, allows multiple settings, service will configure each one by one
+  repeated ConfigOptions settings=2;
+  bool valid = 3 ;
+}
+
+// ConfigResponse response of config APIs
+message ConfigDevicesResponse {
+  repeated common.DeviceIdentify devices=1;
+  SessionState session=2;
+}
+
+
+
+message GetResultResponse {
+  SessionState session=1;
+  repeated ConfigResult config_results=2;
+}
+
+// ConfigResponse response of config APIs
+message ConfigResponse {
+  common.DeviceIdentify device=1;
+  SessionState session=2;
+}
+
+// ListRequest
+message ListRequest {
+  repeated string session_ids=1;
+  string filter_state=2;
+}
+
+// ListResponse
+message ListResponse {
+  repeated SessionState sessions=1;
+}
+
+// UploadConfigRequest
+message UploadConfigRequest {
+  common.DeviceIdentify device=1;
+  string protol=2;
+  // kind=null means get all settings
+  repeated string kinds=3;
+
+}
+
+message UploadConfigResponse {
+  bool success=1;
+  string message =2;
+  common.DeviceIdentify device=3;
+  string protol=4;
+  // kind=null means get all settings
+  repeated string kinds=5;
+  // config payload
+  google.protobuf.Struct payload=6;
+}
+
+message StoreRequest {
+  // device id,
+  common.DeviceIdentify device=1;
+  // new name of uploaded config file 
+  string uploaded_config_file_name =2;
+}
+
+message StoreResponse {
+  SessionState state=1;
+  common.DeviceIdentify device=2;
+  // file unique id
+  string file_id=3;
+  // file's location
+  string file_location=4;
+}
+
+
+
+
+
+

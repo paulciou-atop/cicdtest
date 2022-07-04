@@ -1,0 +1,38 @@
+syntax = "proto3";
+package security;
+
+option go_package = "/v1/security";
+import "google/api/annotations.proto";
+
+
+message EmptyParams {
+}
+message  ResponseData{
+  bytes data=1;
+}
+
+
+service pki{
+  rpc GetRootCrt(EmptyParams) returns (stream ResponseData){
+     option (google.api.http) = {
+           post: "/api/v1/security/RootCrt",
+		       body: "*"
+      };
+  }
+
+  rpc GetSrvCrt(EmptyParams) returns (stream ResponseData){
+     option (google.api.http) = {
+           post: "/api/v1/security/SrvCrt",
+		       body: "*"
+      };
+  }
+
+  rpc GetSrvKey(EmptyParams) returns (stream ResponseData){
+     option (google.api.http) = {
+           post: "/api/v1/security/SrvKey",
+		       body: "*"
+      };
+  }
+
+}
+

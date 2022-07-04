@@ -1,0 +1,217 @@
+syntax = "proto3";
+package atopudpscan;
+
+option go_package = "nms/api/v1/atopudpscan";
+import "google/api/annotations.proto";
+
+
+message EmptyParams {
+}
+
+
+message scanConfig
+{
+string ServerIp=1;
+string id=2;  
+}
+
+
+message Sessions
+{
+string id=1;
+}
+
+
+message Net {
+string ServerIp=1;
+}
+
+message GwdConfig {        
+string      MACAddress  =1;
+string    	IPAddress   =2;
+string    	NewIPAddress=3 ;
+string    	Netmask   =4 ;
+string    	Gateway  =5 ;  
+string    	Hostname =6  ; 
+string    	Username   =7; 
+string    	Password  =8 ;
+string      ServerIp=9  ;
+}
+
+message DeviceInfo {
+string model=1;
+string macAddress=2;
+string iPAddress=3;
+string netmask=4;
+string gateway=5;
+string hostname=6;
+string kernel=7;
+string ap=8;
+bool isDHCP=9;
+}
+
+message InputDevice{
+ repeated  DeviceInfo devices=1;
+}
+
+message DeviceResponse{
+ repeated  DeviceInfo devices=1;
+}
+
+enum SessionStatus {
+  running  = 0;
+  success  = 1;
+  fail  = 2;
+  notfound= 3;
+}
+
+
+message ResponseSession{
+string id=1;
+SessionStatus status=2;
+string message=3;
+}
+
+message Response{
+bool result=1;
+string message=2;
+}
+
+
+
+message FwRequest {        
+string   IPAddress  =1;
+
+}
+
+
+message ServerIp {        
+repeated string Ip=1;
+}
+
+
+
+
+service gwd{
+    rpc Beep(GwdConfig) returns (Response) {
+        option (google.api.http) = {
+			post: "/api/v1/gwd/Beep",
+			body: "*"
+     
+        };
+    } 
+    rpc GetServerIp(EmptyParams) returns (ServerIp) {
+       option (google.api.http) = {
+			get: "/api/v1/gwd/GetServerIp"
+      
+        };
+    } 
+    rpc Stop(Sessions) returns(Response) {
+       option (google.api.http) = {
+			post: "/api/v1/gwd/Stop"
+            body: "*"
+        };
+    }
+
+    rpc SessionScan(scanConfig)returns (ResponseSession) {
+        option (google.api.http) = {
+           post: "/api/v1/gwd/SessionScan",
+		   body: "*"
+        };
+    }
+    rpc GetSessionStatus(Sessions)returns (ResponseSession) {
+        option (google.api.http) = {
+           post: "/api/v1/gwd/GetSessionStatus",
+		   body: "*"
+        };
+    }
+
+    rpc GetSessionData(Sessions)returns (DeviceResponse) {
+        option (google.api.http) = {
+           post: "/api/v1/gwd/GetSessionData",
+		   body: "*"
+        };
+    }   
+}
+
+
+
+enum UploadStatusCode {
+        Unknown = 0;
+        Ok = 1;
+        Failed = 2;
+}
+message Chunk {
+    bytes Content = 1;
+}
+
+message UploadStatus {
+     UploadStatusCode Code = 1;
+     string Message = 2;
+     string FileName=3;
+}
+
+enum fwStatus {
+  none  = 0;
+  process=1;
+  upgrading= 2;
+  error  = 3;
+  complete  = 4;
+}
+message fwMessage {
+fwStatus status=1;    
+string message=2;
+}
+
+message  FwInfo{
+  string DeviceIp=1;
+  string FileName=2;
+}
+
+
+
+service atopDevice{
+  rpc SettingConfig(GwdConfig) returns(Response){
+       option (google.api.http) = {
+			post: "/api/v1/atopDevice/SettingConfig",
+			body: "*"
+        };
+  }
+
+  rpc Upload(stream Chunk)  returns(UploadStatus){
+     option (google.api.http) = {
+			post: "/api/v1/atopDevice/Upload",
+			body: "*"
+        };
+  }
+
+
+
+  rpc FwUpgrading(FwInfo)  returns(Response){
+     option (google.api.http) = {
+			post: "/api/v1/atopDevice/FwUpgrading",
+			body: "*"
+        };
+  }
+  
+  rpc GetProcessStatus(FwRequest)  returns(fwMessage){
+     option (google.api.http) = {
+			post: "/api/v1/atopDevice/GetProcessStatus"
+			body: "*"
+        };
+  }
+  rpc Reboot(GwdConfig) returns (Response) {
+     option (google.api.http) = {
+			post: "/api/v1/atopDevice/Reboot",
+			body: "*"
+        };
+  } 
+  rpc GetServerIp(EmptyParams) returns (ServerIp) {
+      option (google.api.http) = {
+		get: "/api/v1/atopDevice/GetServerIp"
+  
+      };
+  } 
+}
+
+

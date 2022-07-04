@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package common;
+
+option go_package = "nms/api/v1/common";
+
+message Pagination {
+  int32 page=1;
+  int32 size=2;
+}
+
+message PaginationResponse {
+  int32 page=1;
+  int32 size=2;
+  int32 total=3;
+}
+
+
+message DeviceIdentify {
+  // device unique indetity e.g.  MAC address, serial number
+  string device_id=1;
+  // device location, e.g.  IP address, file path
+  string device_path=2;
+}

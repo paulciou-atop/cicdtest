@@ -1,0 +1,49 @@
+version: '3'
+
+volumes:
+  grafana-data:
+    driver: local
+  prometheus-data:
+    driver: local
+
+services:
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus_etc:/etc/prometheus
+      - prometheus-data:/prometheus
+    restart: unless-stopped
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+  
+  serviceswatcher:
+    build: ..
+    ports:
+      - "8081:8081"
+    command: run
+
+  snmpscan:
+    build: ../../snmpscan
+    depends_on:
+      - serviceswatcher
+      - redis
+    ports:
+      - "8084:8084"
+    command: run
+
+  exporter:
+    build: ./exporter
+    depends_on:
+      - serviceswatcher

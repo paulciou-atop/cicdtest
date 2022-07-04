@@ -1,0 +1,73 @@
+// Copyright Atop NMS team.
+//
+
+// This file was a serviceswatcher API defined, When running one or more services 
+// ( scanner service, snmp service, gwd service, etc.) on a machine you can use this service
+// to specify to list each service information. 
+// Each service can query this service to figure out IP address and port for each service. 
+//
+
+syntax = "proto3";
+
+option go_package = "/v1/serviceswatcher";
+
+package serviceswatcher;
+import "google/api/annotations.proto";
+
+/*
+  ServiceInfo - services' basic information
+ */
+message ServiceInfo {
+  string name=1;
+  string address=2;
+  int32 port=3;
+  repeated string kind=4; // API kind ex:["https","grpc"]
+}
+
+message ServicesResponse {
+  string version=1;
+  repeated ServiceInfo infos=2;
+}
+
+message GetRequest {
+  string service_name=1;
+}
+
+message GetResponse {
+  bool success =1;
+  ServiceInfo info=2;
+}
+
+message RegisterResponse {
+  bool success = 1;
+  string reason = 2;
+}
+
+message Empty {
+}
+
+// Interface exported by the server.
+service Watcher {
+  // List all running services information
+  rpc List(Empty) returns (ServicesResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/services"
+    };
+  }
+
+  // Get get {service_name}'s information
+  rpc Get(GetRequest) returns (GetResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/services/{service_name}"
+    };
+  }
+  
+  rpc Register(ServiceInfo) returns (RegisterResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/services/register"
+      body:"*"
+    };
+  }
+}
+
+

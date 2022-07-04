@@ -1,0 +1,56 @@
+
+version: "3.9"
+services:
+  serviceswatcher:
+    build: 
+      context: .
+      target: serviceswatcher
+    ports:
+      - "8081:8081"
+    command: run
+  
+  inventory:
+    build:
+      context: .
+      target: inventory
+    depends_on:
+      - postgresql
+      - rabbitmq
+    ports:
+      - "8101:8101"
+    command: run
+
+  config:
+    build: 
+      context: .
+      target: config
+    depends_on:
+      - serviceswatcher
+      - postgresql
+      - rabbitmq
+    ports:
+      - "8100:8100"
+    command: run
+
+  postgresql:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=nms
+    restart: always
+
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - 15672:15672
+      - 5672:5672
+      - 1883:1883
+    container_name: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    command: "/bin/bash -c \"rabbitmq-plugins enable rabbitmq_mqtt; rabbitmq-server; sleep 1; rabbitmqctl set_permissions -p / guest '.*' '.*' '.*'\""

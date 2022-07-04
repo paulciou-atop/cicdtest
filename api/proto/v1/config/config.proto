@@ -1,0 +1,54 @@
+// Copyright Atop NMS team.
+//
+
+// This file was a configration API defined
+
+syntax = "proto3";
+
+// Output file path
+// To output file in the right path, please use defalut protoc output mode paths=import
+// example: protoc --proto_path=../api/proto/ --go_out=. --go-grpc_out=. ../api/proto/*.proto
+option go_package = "/v1/config";
+
+package config;
+import "google/api/annotations.proto";
+import "google/protobuf/struct.proto";
+
+message ConfigRequest {
+  google.protobuf.Struct config = 1;
+}
+
+message ConfigResponse {
+  google.protobuf.Struct pre_config = 1;
+  google.protobuf.Struct new_config = 2;
+}
+
+message GetRequest {
+  repeated string keys = 1; // What configuration itme, empty means all
+}
+
+// Interface exported by the server.
+service Config {
+  rpc Set(ConfigRequest) returns (ConfigResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/config"
+      body:"*"
+    };
+  }
+  
+  rpc Update(ConfigRequest) returns (ConfigResponse) {
+    option (google.api.http) = {
+      patch: "/api/v1/config"
+      body: "*"
+    };
+  }
+
+  rpc Get(GetRequest) returns (ConfigResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/config"
+    };
+  }
+  
+}
+
+

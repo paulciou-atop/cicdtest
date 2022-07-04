@@ -1,0 +1,13 @@
+- device_id: dev1.json
+  device_path: /home/austin/code/atop/NMS/config/pkg/config/dummydevs/dev1.json
+  network:
+    ip: 10.0.1.11
+    mask: 255.255.0.0
+  general:
+    name: new-dev1
+- device_id: dev2.json
+  device_path: /home/austin/code/atop/NMS/config/pkg/config/dummydevs/dev2.json
+  network:
+    ip: 10.0.1.12
+  general:
+    name: new-dev2

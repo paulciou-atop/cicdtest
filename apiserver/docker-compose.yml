@@ -1,0 +1,14 @@
+version: '3.1' #version
+services: 
+  apiserver:
+    restart: always 
+    image: nginx:latest 
+    container_name: nginx 
+    ports:
+      - 80:80
+      - 443:443 
+    volumes:
+      - ./nginx/conf/:/etc/nginx/conf.d/:ro
+      - ./nginx/log/:/var/log/nginx
+    extra_hosts:
+      - "host:host-gateway"

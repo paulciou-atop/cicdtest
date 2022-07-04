@@ -1,0 +1,15 @@
+{
+  "general": {
+    "name": "dev1.json"
+  },
+  "network": {
+    "ip": "10.0.12.11",
+    "mac": "01:AB:CD:00:1E:10",
+    "mask": "255.255.255.0"
+  },
+  "snmp": {
+    "port": 161,
+    "private": "private",
+    "ver": "V3"
+  }
+}

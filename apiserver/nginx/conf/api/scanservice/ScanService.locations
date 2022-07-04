@@ -1,0 +1,50 @@
+location = /scan/start {
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-Host $host;
+            proxy_set_header X-Forwarded-Port $server_port;
+            proxy_redirect off;
+           # root   html;
+           #index  index.html index.htm;
+		   proxy_pass http://scanservice/v1/scan/start;
+ }
+
+
+location = /scan/stop {
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-Host $host;
+            proxy_set_header X-Forwarded-Port $server_port;
+            proxy_redirect off;
+           # root   html;
+           #index  index.html index.htm;
+		   proxy_pass http://scanservice/v1/scan/stop;
+ }
+
+location = /scan/check {
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-Host $host;
+            proxy_set_header X-Forwarded-Port $server_port;
+            proxy_redirect off;
+           # root   html;
+           #index  index.html index.htm;
+		   proxy_pass http://scanservice/v1/scan/check;
+ }
+
+location = /scan/result {
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-Host $host;
+            proxy_set_header X-Forwarded-Port $server_port;
+            proxy_redirect off;
+           # root   html;
+           #index  index.html index.htm;
+		   proxy_pass http://scanservice/v1/scan/result;
+ }
+
+location = /scan/result/last {
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-Host $host;
+            proxy_set_header X-Forwarded-Port $server_port;
+            proxy_redirect off;
+           # root   html;
+           #index  index.html index.htm;
+		    proxy_pass http://scanservice/v1/scan/result/last;
+ }

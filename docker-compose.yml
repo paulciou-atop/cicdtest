@@ -1,0 +1,130 @@
+# If you want to build this file on windows, you should use window path separate "\" instead of "/"
+
+version: "3.9"
+services:
+  serviceswatcher:
+    build: 
+      context: .
+      target: serviceswatcher
+    ports:
+      - "8081:8081"
+    command: run
+
+  snmpscan:
+    build: 
+      context: .
+      target: snmpscan
+    depends_on:
+      - serviceswatcher
+      - postgresql
+    ports:
+      - "8084:8084"
+    command: run
+
+  inventory:
+    build:
+      context: .
+      target: inventory
+    depends_on:
+      - postgresql
+    ports:
+      - "8101:8101"
+      - "8111:8111"
+    command: run
+  
+  config:
+    build: 
+      context: .
+      target: config
+    depends_on:
+      - serviceswatcher
+      - postgresql
+      - rabbitmq
+    ports:
+      - "8085:8085"
+    command: run
+
+  # atopudpscan:
+  #   build: ./atopudpscan
+  #   depends_on:
+  #     - serviceswatcher
+  #     - postgresql
+  #   network_mode: "host"
+  #   command: run
+
+  # scanservice:
+  #   build: ./scanservice
+  #   depends_on:
+  #     - serviceswatcher
+  #     - postgresql
+  #   ports:
+  #     - 8088:8088
+  #     - 8098:8098
+  #   extra_hosts:
+  #     - "atopudpscan:host-gateway"
+  #   command: run
+
+  # mongo:
+  #   image: mongo
+
+  # datastore:
+  #   build: ../../datastore
+  #   command: run
+  #   ports:
+  #     - 8082:8082
+
+  # testing:
+  #   build: ./testing
+  #   depends_on:
+  #     - serviceswatcher
+  #     - postgresql
+
+  # snmpsim:
+  #   build: ./snmpscan/test/testdata
+
+  redis:
+    image: redis
+
+  postgresql:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=nms
+    restart: always
+
+  # nmsfrontend:
+  #   build: ./frontend
+  #   container_name: nmsfrontend_c
+  #   ports:
+  #     - 3000:3000
+  #   stdin_open: true
+  #   tty: true
+    
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - 15672:15672
+      - 5672:5672
+      - 1883:1883
+    container_name: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    command: "/bin/bash -c \"rabbitmq-plugins enable rabbitmq_mqtt; rabbitmq-server; sleep 1; rabbitmqctl set_permissions -p / guest '.*' '.*' '.*'\""
+
+    
+  apiserver:
+    restart: always 
+    image: nginx:latest 
+    container_name: apiserver 
+    ports:
+      - 80:80
+      - 443:443 
+    volumes:
+      - ./api/nginx/conf/:/etc/nginx/conf.d/:ro
+      - ./api/nginx/log/:/var/log/nginx
+    extra_hosts:
+      - "host:host-gateway"

@@ -1,0 +1,41 @@
+FROM golang:1.18.3-bullseye AS build
+WORKDIR /build
+COPY go.mod ./
+COPY go.sum ./
+COPY . .
+RUN go mod tidy 
+# install protoc & grpc-gateway 
+RUN apt-get update \
+    && apt-get install -y protobuf-compiler
+RUN go get github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway\
+    && go get github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2\
+    && go get google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.1\
+    && go get google.golang.org/protobuf/cmd/protoc-gen-go@v1.27\
+    && go get github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger\
+    && go get github.com/grpc-ecosystem/grpc-gateway/v2/internal/descriptor@v2.10.0
+RUN go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway\
+    && go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2\
+    && go install google.golang.org/protobuf/cmd/protoc-gen-go\
+    && go install google.golang.org/grpc/cmd/protoc-gen-go-grpc
+RUN mkdir -p google/api 
+RUN curl https://raw.githubusercontent.com/googleapis/googleapis/master/google/api/annotations.proto > google/api/annotations.proto 
+RUN curl https://raw.githubusercontent.com/googleapis/googleapis/master/google/api/http.proto > google/api/http.proto
+RUN export PATH="$PATH:$(go env GOPATH)/bin"
+# install ping 
+RUN apt-get update && apt-get install -y iputils-ping 
+# install vim 
+RUN apt-get install -y vim 
+# install grpcurl 
+RUN go install github.com/fullstorydev/grpcurl/cmd/grpcurl@v1.8.6 
+# Build grpc api 
+RUN chmod 755 /build/api/build.sh\
+    && cd /build/api/\
+    && ./build.sh
+# Build services
+RUN mkdir ./bin
+RUN go build -o ./bin/config ./config/cmd/config
+RUN go build -o ./bin/serviceswatcher ./serviceswatcher/cmd/serviceswatcher
+RUN go build -o ./bin/snmpscan ./snmpscan/cmd/snmpscan
+RUN go build -o ./bin/atopudpscan ./atopudpscan/cmd/atopudpscan
+RUN go build -o ./bin/inventory ./inventory/cmd/inventory
+RUN go build -o ./bin/scanservice ./scanservice/cmd/scanservice

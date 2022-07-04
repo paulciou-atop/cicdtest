@@ -1,0 +1,9 @@
+*.proto
+*.dld
+*.exe
+*.crt
+*.key
+.vscode/
+password
+doc/
+config.json

@@ -1,0 +1,51 @@
+// Copyright Atop NMS team.
+//
+
+// This file define configration repository gRPC API, which allow to access configuration repository
+
+syntax = "proto3";
+
+option go_package = "nms/api/v1/configrepo";
+
+package configrepo;
+import "google/api/annotations.proto";
+import "v1/common/common.proto";
+import "v1/devconfig/devconfig.proto";
+
+service ConfigLibrary {
+ // Get conifg with hash in the library
+  rpc Get(GetConfigRequest) returns (GetConfigResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/config-repository/{hash}"
+      body:"*"
+    };
+  }
+
+  rpc List (ListConfigRequest) returns (ListConfigResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/config-repository/all"
+      body:"*"
+    };
+  }
+}
+
+message GetConfigRequest {
+  // config hash
+  string hash = 1;
+}
+
+message GetConfigResponse {
+  bool success=1;
+  string message=2;
+  devconfig.ConfigOptions config=3;
+}
+
+message ListConfigRequest {
+  common.Pagination pagination =1;
+}
+
+message ListConfigResponse {
+  bool success =1;
+  string message =2;
+  repeated devconfig.ConfigOptions configs=3;
+}

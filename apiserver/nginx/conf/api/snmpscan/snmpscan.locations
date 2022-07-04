@@ -1,0 +1,78 @@
+location = /snmp/walkall {
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-Host $host;
+            proxy_set_header X-Forwarded-Port $server_port;
+            proxy_redirect off;
+           # root   html;
+           #index  index.html index.htm;n
+		    proxy_pass http://snmpscan/api/v1/snmp/walkall;
+}
+location = /snmp/Get{
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-Host $host;
+            proxy_set_header X-Forwarded-Port $server_port;
+            proxy_redirect off;
+           # root   html;
+           #index  index.html index.htm;n
+		    proxy_pass http://snmpscan/api/v1/snmp/oids;
+}
+location = /snmp/Scan {
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-Host $host;
+            proxy_set_header X-Forwarded-Port $server_port;
+            proxy_redirect off;
+           # root   html;
+           #index  index.html index.htm;n
+		    proxy_pass http://snmpscan/v1/snmp/scan;
+}
+location = /snmp/SessionScan {
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-Host $host;
+            proxy_set_header X-Forwarded-Port $server_port;
+            proxy_redirect off;
+           # root   html;
+           #index  index.html index.htm;n
+		    proxy_pass http://snmpscan/api/v1/snmp/session-scan;
+}
+location = /snmp/Describe {
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-Host $host;
+            proxy_set_header X-Forwarded-Port $server_port;
+            proxy_redirect off;
+           # root   html;
+           #index  index.html index.htm;n
+		    proxy_pass http://snmpscan/api/v1/snmp/describe;
+}
+
+location = /snmp/StartAsyncScan {
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-Host $host;
+            proxy_set_header X-Forwarded-Port $server_port;
+            proxy_redirect off;
+           # root   html;
+           #index  index.html index.htm;n
+		    proxy_pass http://snmpscan/api/v1/snmp/async-scan/start;
+}
+
+
+
+
+location  ~* /snmp/StopAsyncScan/(.+)$ {
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-Host $host;
+            proxy_set_header X-Forwarded-Port $server_port;
+            proxy_redirect off;
+           # root   html;
+           #index  index.html index.htm;n
+		    proxy_pass http://snmpscan/api/v1/snmp/async-scan/stop/$1;
+}
+
+location  ~* /snmp/GetAsyncScanResult/(.+)$ {
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-Host $host;
+            proxy_set_header X-Forwarded-Port $server_port;
+            proxy_redirect off;
+           # root   html;
+           #index  index.html index.htm;n
+		    proxy_pass http://snmpscan/api/v1/snmp/scan/async-scan/$1;
+}

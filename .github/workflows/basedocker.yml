@@ -1,0 +1,36 @@
+name: Create Base Docker Image 
+on:
+  # build the base image periodically twice a month 
+  schedule: 
+    - cron: '0 3 1,15 * *'
+  # user can also use the GUI on the GitHub web to run this workflow manually
+  workflow_dispatch:
+jobs:
+  Docker-Build-Base-Image:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Build Base Image -  $(date +'%Y-%m-%dT%H:%M:%S')" 
+      - name: Checkout Repository Code
+        uses: actions/checkout@v3
+        id: repository_checkout
+      - name: Create Docker Image
+        id: docker_image_creation
+        run: | 
+          cp cicd/docker/Dockerfile_base_linux . 
+          docker build -t nms_base_image -f Dockerfile_base_linux .
+      - name: Login to Docker Hub 
+        uses: docker/login-action@v2
+        with: 
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      - name: Push To Docker Hub 
+        # currently, we use docker hub private repository, will change to Nexus later 
+        id: docker_push
+        run: |
+          docker tag nms_base_image:latest appleatop/nms_base_image:latest
+          docker push appleatop/nms_base_image:latest 
+      - name: Logout from Docker Hub
+        run: docker logout
+         
+
+      

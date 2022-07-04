@@ -1,0 +1,50 @@
+location = /gwd/Beep {
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-Host $host;
+            proxy_set_header X-Forwarded-Port $server_port;
+            proxy_redirect off;
+           # root   html;
+           #index  index.html index.htm;n
+		   proxy_pass http://atopudpscan/api/v1/gwd/Beep;
+ }
+
+location = /gwd/SessionScan {
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-Host $host;
+            proxy_set_header X-Forwarded-Port $server_port;
+            proxy_redirect off;
+           # root   html;
+           #index  index.html index.htm;n
+		    proxy_pass http://atopudpscan/api/v1/gwd/SessionScan;
+}
+
+location = /gwd/GetSessionStatus{
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-Host $host;
+            proxy_set_header X-Forwarded-Port $server_port;
+            proxy_redirect off;
+           # root   html;
+           #index  index.html index.htm;n
+		   proxy_pass http://atopudpscan/api/v1/gwd/GetSessionStatus;
+}
+
+location = /gwd/Stop {
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-Host $host;
+            proxy_set_header X-Forwarded-Port $server_port;
+            proxy_redirect off;
+           # root   html;
+           #index  index.html index.htm;n
+		   proxy_pass http://atopudpscan/api/v1/gwd/Stop;
+ }
+
+
+location = /gwd/GetServerIp {
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-Host $host;
+            proxy_set_header X-Forwarded-Port $server_port;
+            proxy_redirect off;
+           # root   html;
+           #index  index.html index.htm;n
+		   proxy_pass http://atopudpscan/api/v1/gwd/GetServerIp;
+ }

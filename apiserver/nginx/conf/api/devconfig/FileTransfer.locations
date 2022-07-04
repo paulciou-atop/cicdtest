@@ -1,0 +1,30 @@
+location = /file-transfer {
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-Host $host;
+            proxy_set_header X-Forwarded-Port $server_port;
+            proxy_redirect off;
+           # root   html;
+           #index  index.html index.htm;n
+		   proxy_pass http://devconfig/api/v1/file-transfer;
+ }
+
+location = /config/store {
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-Host $host;
+            proxy_set_header X-Forwarded-Port $server_port;
+            proxy_redirect off;
+           # root   html;
+           #index  index.html index.htm;n
+		   proxy_pass http://devconfig/api/v1/config/store;
+ }
+
+
+location  ~* /file-transfer/result/(.+)$ {
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-Host $host;
+            proxy_set_header X-Forwarded-Port $server_port;
+            proxy_redirect off;
+           # root   html;
+           #index  index.html index.htm;n
+		   proxy_pass http://devconfig/api/v1/file-transfer/result/$1;
+ }

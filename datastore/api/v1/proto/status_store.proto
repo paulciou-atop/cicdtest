@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package statusStore;
+
+option go_package = "./;statusStore";
+
+message SessionStatus {
+  string id = 1;
+  string ip = 2;
+  string status = 3;
+  string type = 4;
+  string time =5;
+  string msg=6;
+}
+
+message DatabaseInfo{
+  string databaseType=1;
+  string databaseName=2;
+  string tableName=3;
+}
+
+message CreateSessionStatusRequest {
+  SessionStatus ss = 1;
+  DatabaseInfo dbInfo=2;
+}
+
+message CreateSessionStatusResponse {
+  SessionStatus ss = 1;
+
+}
+
+message GetSessionStatusRequest {
+  string id = 1;
+  DatabaseInfo dbInfo=2;
+}
+
+message GetSessionStatusResponse {
+  SessionStatus ss = 1;
+
+}
+
+message UpdateSessionStatusRequest {
+  SessionStatus ss = 1;
+  DatabaseInfo dbInfo=2;
+}
+
+message UpdateSessionStatusResponse {
+  SessionStatus ss = 1;
+
+}
+
+message DeleteSessionStatusRequest {
+  string ss_id = 1;
+  DatabaseInfo dbInfo=2;
+}
+
+message DeleteSessionStatusResponse {
+  string ss_id = 1;
+
+}
+
+message ListSessionStatusRequest {
+  DatabaseInfo dbInfo=2;
+}
+
+message ListSessionStatusResponse {
+  SessionStatus ss = 1;
+}
+
+service SessionStatusService {
+  rpc CreateSessionStatus (CreateSessionStatusRequest) returns (CreateSessionStatusResponse);
+  rpc GetSessionStatus (GetSessionStatusRequest) returns (GetSessionStatusResponse);
+  rpc UpdateSessionStatus (UpdateSessionStatusRequest) returns (UpdateSessionStatusResponse);
+  rpc DeleteSessionStatus (DeleteSessionStatusRequest) returns (DeleteSessionStatusResponse);
+  rpc ListSessionStatus (ListSessionStatusRequest) returns (stream ListSessionStatusResponse);
+}

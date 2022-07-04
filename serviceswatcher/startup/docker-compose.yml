@@ -1,0 +1,77 @@
+# If you want to build this file on windows, you should use window path separate "\" instead of "/"
+
+version: "3.9"
+services:
+  serviceswatcher:
+    build: ..
+    ports:
+      - "8081:8081"
+    command: run
+
+  snmpscan:
+    build: ../../snmpscan
+    depends_on:
+      - serviceswatcher
+      - postgresql
+    ports:
+      - "8084:8084"
+    command: run
+
+  atopudpscan:
+    build: ../../atopudpscan
+    depends_on:
+      - serviceswatcher
+      - postgresql
+    network_mode: "host"
+    command: run
+
+  scanservice:
+    build: ../../scanservice
+    depends_on:
+      - serviceswatcher
+      - postgresql
+    ports:
+      - 8088:8088
+      - 8098:8098
+    extra_hosts:
+      - "atopudpscan:host-gateway"
+    command: run
+
+  # mongo:
+  #   image: mongo
+
+  # datastore:
+  #   build: ../../datastore
+  #   command: run
+  #   ports:
+  #     - 8082:8082
+
+  # testing:
+  #   build: ./testing
+  #   depends_on:
+  #     - serviceswatcher
+  #     - postgresql
+
+  snmpsim:
+    build: ../../snmpscan/test/testdata
+
+  redis:
+    image: redis
+
+  postgresql:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=nms
+    restart: always
+
+  nmsfrontend:
+    build: ../../../frontend
+    container_name: nmsfrontend_c
+    ports:
+      - 3000:3000
+    stdin_open: true
+    tty: true
